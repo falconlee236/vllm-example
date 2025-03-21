@@ -3,8 +3,8 @@ import torch
 from transformers import pipeline, AutoModelForCausalLM, BitsAndBytesConfig, AutoTokenizer
 from peft import PeftModel
 
-ADAPTER_PATH = "./output/adapter/mnc_adapter"
-BASE_PATH = "./output/model"
+ADAPTER_PATH = "sajjadhadi/Disease-Diagnosis-Qwen2.5-0.5B"
+BASE_PATH = "Qwen/Qwen2.5-0.5B"
 BNB_CONFG = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_quant_type="nf4",
@@ -27,7 +27,10 @@ default_generator = pipeline(
     model=model,
     tokenizer=tokenizer,
     device_map="auto",
-    torch_dtype=torch.float16
+    torch_dtype=torch.float16,
+    max_length=10,
+    truncation=True,
+    max_new_tokens=10, 
 )
 print(f"this is base model result: {default_generator(text)}")
 
@@ -48,7 +51,10 @@ lora_generator = pipeline(
     model=lora_model,
     tokenizer=tokenizer,
     device_map="auto",
-    torch_dtype=torch.float16
+    torch_dtype=torch.float16,
+    max_length=10,
+    truncation=True,
+    max_new_tokens=10,
 )
 print(f"this is lora model result: {lora_generator(text)}")
 
